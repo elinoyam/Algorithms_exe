@@ -25,14 +25,15 @@ int main() {
     gp.PrintGraph();
     cout << "=========================================================" << endl;
 
-    DynamicArray<DynamicArray<int>*>* res = gp.BFS(4);
-    for (int i = 0; i < 6; i++) {
+    Graph* res = gp.ShortestPathFromSToT(1, 4);
+    /*for (int i = 0; i < 6; i++) {
         DynamicArray<int>* toPrint = res->at(i);
         for (int j = 0; j < toPrint->size(); j++) {
             cout << toPrint->at(j) << " ";
         }
         cout << endl;
-    }
+    }*/
+    res->PrintGraph();
 
 
     return 0;
