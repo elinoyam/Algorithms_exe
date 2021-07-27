@@ -119,6 +119,7 @@ Graph* Graph::GetTransposedGraph() {
 			int target = adj->getEdge().getEdgeTargetVertex();
 			int weight = adj->getEdge().getEdgeWeight();
 			transpose->AddEdge(target, origin, weight);				// add the oposite edge to the G tranpose
+			adj = adj->getNext();
 		}
 	}
 
@@ -132,30 +133,38 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	int index = 0;
 
 	while (listOfBfs->at(index)->size() > 0) {
-		for (int i = 0; i < listOfBfs->at(-index)->size(); i++) {
+		for (int i = 0; i < listOfBfs->at(index)->size(); i++) {
 			DynamicArray<int>* nextLevel = listOfBfs->at(index + 1);
 			int vertixNumber = listOfBfs->at(index)->at(i);
 			ListOfEdges newList = m_AdjList[vertixNumber - 1];
 			ListOfEdges::EdgeNode* currentEdge = newList.getListHead();
 			while (currentEdge != nullptr) {
 				bool found = false;
-				for (int k = 0; k < nextLevel->size() && !found; k++) {		// check if the next level contain this edex
+				for (int k = 0; k < nextLevel->size() && !found; k++) {		// check if the next level contain this edge
 					if (nextLevel->at(k) == currentEdge->getEdge().getEdgeTargetVertex()) {
 						found = true;
 					}
 				}
-				//check if the eage is correct if it is add to a list/ delete it but before i need to save my original
+				//check if the edge is correct if it is add to a list/ or delete it but before i need to save my original
 				if (!found) {
+					//save where to go next
+					ListOfEdges::EdgeNode* temp = currentEdge->getNext();
+
 					// delete the eadge
 					newList.RemoveEdge(currentEdge->getEdge().getEdgeTargetVertex());
+					currentEdge = temp;
 				}
-				// ignore save the edge
+				else {
+					// ignore save the edge
+					currentEdge = currentEdge->getNext();
+				}
 				
-				currentEdge = currentEdge->getNext();
+				
 			}
 			ListOfEdges::EdgeNode* node = newList.getListHead();
 			while (node != nullptr) {
 				Gs->AddEdge(node->getEdge().getEdgeOriginVertex(), node->getEdge().getEdgeTargetVertex());
+				node = node->getNext();
 			}
 			// put the list in the right vertix in the new graph
 			
@@ -164,14 +173,20 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	}
 
 
+	/*Gs->PrintGraph();
+	cout << "=========================================================" << endl;*/
+
 	Graph* GsTranspose = Gs->GetTransposedGraph();  
+
+	/*GsTranspose->PrintGraph();
+	cout << "=========================================================" << endl;*/
 
 	DynamicArray<DynamicArray<int>*>* listOfBfs2222 = GsTranspose->BFS(i_ToVertex);
 
 	Graph* HTranspose = new Graph(m_NumberOfVertex);
 	//only save the edges from t
 	
-	for (int i = 0; i < m_NumberOfVertex; ++i) {
+	for (int k = 0; k < m_NumberOfVertex; ++k) {
 		bool found = false;
 		for (int i = 0; i < listOfBfs2222->size() && !found; ++i) {
 			DynamicArray<int>* currentLevel = listOfBfs2222->at(i);
@@ -183,12 +198,15 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 			}
 		}
 
+		// until here works good ! - TODO
+
 		if(!found/*listOfBfs2222.contains(i+1)*/) {
 			// bad delete its list of ages	
-			ListOfEdges& list = m_AdjList[i];
+			ListOfEdges& list = m_AdjList[k];
 			ListOfEdges::EdgeNode* currentEdge = list.getListHead();
 			while (currentEdge != nullptr) {
 				GsTranspose->RemoveEdge(currentEdge->getEdge().getEdgeOriginVertex(), currentEdge->getEdge().getEdgeTargetVertex());
+				currentEdge = currentEdge->getNext();
 			}
 		}
 	//else - good skip

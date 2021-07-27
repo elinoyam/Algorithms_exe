@@ -53,7 +53,7 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 		delete currentNode;
 		found = true;
 	}
-	while (currentNode != nullptr && currentNode->getNext() != nullptr && !found) {
+	while (!found && currentNode != nullptr && currentNode->getNext() != nullptr ) {
 		if (currentNode->getNext()->getEdge().getEdgeTargetVertex() == i_Adjacent) { 	// the edge we want to remove is at the middle of the list
 			ListOfEdges::EdgeNode* toDelete = currentNode->getNext();
 			currentNode->setNext(toDelete->getNext());
