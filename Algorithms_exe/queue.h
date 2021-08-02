@@ -4,8 +4,19 @@ using namespace std;
 
 class Queue
 {
-public:
-	Queue(int n);
+private: int m_Head;
+private: int m_Tail;
+private: int m_PhSize;
+private: int* m_Queue;
+private: int AddOne(int x);
+
+public:	Queue(int n);
+public:	~Queue();
+public:	void MakeEmpty();
+public:	bool isEmpty();
+public:	int Front();
+public:	void Enqueue(int vertexToInset);
+public:	int Dequeue();
 };
 
 
