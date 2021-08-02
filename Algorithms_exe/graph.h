@@ -26,6 +26,6 @@ class Graph
 	public: DynamicArray<DynamicArray<int>*>* BFS(int i_Vertex);
 	public: Graph* GetTransposedGraph();
 	public: Graph* ShortestPathFromSToT(int i_FromVertex, int i_ToVertex);
-
+	public: bool fakeContains(DynamicArray<int>* arrToSearch, int vertexToFind);
 };
 

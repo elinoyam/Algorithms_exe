@@ -19,6 +19,7 @@ public:
 
 
 	public:ListOfEdges() :m_ListHead(nullptr), m_ListTail(nullptr), m_NumberOfEdgesInList(0){}
+	public: ListOfEdges(const ListOfEdges& other);
 	public:~ListOfEdges();
 	public: bool isEmpty() { return m_NumberOfEdgesInList == 0; }
 	public: EdgeNode* addEdgeToTail(Edge & i_EdgeToAdd);

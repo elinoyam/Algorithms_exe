@@ -1,6 +1,14 @@
 #include "listOfEdges.h"
 using namespace std;
 
+ListOfEdges::ListOfEdges(const ListOfEdges& other) {
+	ListOfEdges::EdgeNode *edge = other.m_ListHead;
+	for (int i = 0; i < other.m_NumberOfEdgesInList; i++) {
+		this->addEdgeToTail(edge->getEdge());
+		edge = edge->getNext();
+	}
+}
+
 ListOfEdges::~ListOfEdges() {
 	ListOfEdges::EdgeNode* toDelete = m_ListHead;
 	ListOfEdges::EdgeNode* saveBeforeDelete;
@@ -50,6 +58,9 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 
 	if (currentNode->getEdge().getEdgeTargetVertex() == i_Adjacent) {					// the edge we want to remove is at the start of the list
 		m_ListHead = currentNode->getNext();
+		if (m_ListHead == nullptr) {
+			m_ListTail = nullptr;
+		}
 		delete currentNode;
 		found = true;
 	}

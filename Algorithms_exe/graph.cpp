@@ -81,11 +81,13 @@ DynamicArray<DynamicArray<int>*>* Graph::BFS(int i_Vertex) {
 	DynamicArray<DynamicArray<int>*>* result = new DynamicArray<DynamicArray<int>*>(m_NumberOfVertex);
 	int* d = new int[m_NumberOfVertex];
 	for (int i = 0; i < m_NumberOfVertex; i++) {
+		//result->at(i) = nullptr;
 		result->push_back(new DynamicArray<int>());
 		d[i] = numeric_limits<int>::max();
-	
 	}
+
 	d[i_Vertex-1] = 0;
+	//result->at(0) = new DynamicArray<int>(1);
 	result->at(0)->push_back(i_Vertex);			// the actual number
 	int index = 0;
 
@@ -132,6 +134,10 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	DynamicArray<DynamicArray<int>*>* listOfBfs = BFS(i_FromVertex);
 	int index = 0;
 
+
+	PrintGraph();
+	cout << "=========================================================" << endl;
+
 	while (listOfBfs->at(index)->size() > 0) {
 		for (int i = 0; i < listOfBfs->at(index)->size(); i++) {
 			DynamicArray<int>* nextLevel = listOfBfs->at(index + 1);
@@ -172,7 +178,8 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 		index++;
 	}
 
-
+	PrintGraph();
+	cout << "=========================================================" << endl;
 	/*Gs->PrintGraph();
 	cout << "=========================================================" << endl;*/
 
@@ -180,40 +187,79 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 
 	/*GsTranspose->PrintGraph();
 	cout << "=========================================================" << endl;*/
-
+	PrintGraph();
+	cout << "=========================================================" << endl;
 	DynamicArray<DynamicArray<int>*>* listOfBfs2222 = GsTranspose->BFS(i_ToVertex);
 
 	Graph* HTranspose = new Graph(m_NumberOfVertex);
 	//only save the edges from t
-	
-	for (int k = 0; k < m_NumberOfVertex; ++k) {
-		bool found = false;
-		for (int i = 0; i < listOfBfs2222->size() && !found; ++i) {
-			DynamicArray<int>* currentLevel = listOfBfs2222->at(i);
-			for (int j = 0; j < currentLevel->size(); j++) {
-				/*int currentVertex = currentLevel->at(j);*/
-				if (currentLevel->at(j) == (i+1)) {
-					found = true;
-				}
-			}
-		}
+	for (int i = 0; i < listOfBfs2222->size()-1; ++i) {
+		DynamicArray<int>* currentLevel = listOfBfs2222->at(i);
+		DynamicArray<int>* nextLevel = listOfBfs2222->at(i+1);
 
-		// until here works good ! - TODO
-
-		if(!found/*listOfBfs2222.contains(i+1)*/) {
-			// bad delete its list of ages	
-			ListOfEdges& list = m_AdjList[k];
-			ListOfEdges::EdgeNode* currentEdge = list.getListHead();
+		for (int j = 0; j < currentLevel->size(); j++) {
+			int currentVertex = currentLevel->at(j);
+			ListOfEdges adjList = GsTranspose->GetAdjList(currentVertex); 
+			ListOfEdges::EdgeNode* currentEdge = adjList.getListHead();
 			while (currentEdge != nullptr) {
-				GsTranspose->RemoveEdge(currentEdge->getEdge().getEdgeOriginVertex(), currentEdge->getEdge().getEdgeTargetVertex());
+				//if(!nextLevel.contains(currentEdge->getEdge().getEdgeTargetVertex())) {
+				//	//delete it from list
+				//	ListOfEdges::EdgeNode* temp = currentEdge->getNext();
+				//	adjList.RemoveEdge(currentEdge->getEdge().getEdgeTargetVertex());
+				//	currentEdge = temp;
+				//}
+				//else {
+				//		currentEdge = currentEdge->getNext();
+				//}
+				if(fakeContains(nextLevel ,currentEdge->getEdge().getEdgeTargetVertex())) {
+					HTranspose->AddEdge(currentEdge->getEdge().getEdgeOriginVertex(), currentEdge->getEdge().getEdgeTargetVertex());
+				}
 				currentEdge = currentEdge->getNext();
 			}
 		}
-	//else - good skip
-
-	} // exit for
-
+	} //end of for 
 
 	Graph* H = HTranspose->GetTransposedGraph();
-	return H;		
+	return H;	
 }
+
+bool Graph::fakeContains(DynamicArray<int>* arrToSearch, int vertexToFind) {
+	bool found = false;
+	for (int k = 0; k < arrToSearch->size() && !found; k++) {		// check if the next level contain this edge
+		if (arrToSearch->at(k) == vertexToFind) {
+			found = true;
+		}
+	}
+	return found;
+}
+	
+	//for (int k = 0; k < m_NumberOfVertex; ++k) {
+	//	bool found = false;
+	//	for (int i = 0; i < listOfBfs2222->size() && !found; ++i) {
+	//		DynamicArray<int>* currentLevel = listOfBfs2222->at(i);
+	//		for (int j = 0; j < currentLevel->size(); j++) {
+	//			/*int currentVertex = currentLevel->at(j);*/
+	//			if (currentLevel->at(j) == (i+1)) {
+	//				found = true;
+	//			}
+	//		}
+	//	}
+
+	//	// until here works good ! - TODO
+
+	//	if(!found/*listOfBfs2222.contains(i+1)*/) {
+	//		// bad delete its list of ages	
+	//		ListOfEdges& list = m_AdjList[k];
+	//		ListOfEdges::EdgeNode* currentEdge = list.getListHead();
+	//		while (currentEdge != nullptr) {
+	//			GsTranspose->RemoveEdge(currentEdge->getEdge().getEdgeOriginVertex(), currentEdge->getEdge().getEdgeTargetVertex());
+	//			currentEdge = currentEdge->getNext();
+	//		}
+	//	}
+	////else - good skip
+
+	//} // exit for
+
+
+	
+//}
