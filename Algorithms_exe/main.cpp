@@ -2,9 +2,14 @@
 #include "dynamicArray.h"
 #include <iostream>
 
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 using namespace std;
 
-int main() {
+int main2() {
     int n = 6;
     Graph gp(n);
     gp.AddEdge(6, 5);
@@ -34,7 +39,13 @@ int main() {
         cout << endl;
     }*/
     res->PrintGraph();
-
+    delete res;
     //gp.PrintGraph();
     return 0;
+}
+
+int main() {
+    main2();
+    _CrtDumpMemoryLeaks();
+    return 11;
 }

@@ -2,9 +2,9 @@
 #include <math.h>
 
 Graph::~Graph() {
-	for (int i = 0; i < m_NumberOfVertex; ++i) {
-		delete (m_AdjList + i);
-	}
+	//for (int i = 0; i < m_NumberOfVertex; ++i) {
+	delete[] (m_AdjList);
+	//
 }
 
 bool Graph::IsAdjacent(int i_FromVertex, int i_ToVertex) {
@@ -135,9 +135,6 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	int index = 0;
 
 
-	PrintGraph();
-	cout << "=========================================================" << endl;
-
 	while (listOfBfs->at(index)->size() > 0) {
 		for (int i = 0; i < listOfBfs->at(index)->size(); i++) {
 			DynamicArray<int>* nextLevel = listOfBfs->at(index + 1);
@@ -178,8 +175,7 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 		index++;
 	}
 
-	PrintGraph();
-	cout << "=========================================================" << endl;
+	
 	/*Gs->PrintGraph();
 	cout << "=========================================================" << endl;*/
 
@@ -187,8 +183,7 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 
 	/*GsTranspose->PrintGraph();
 	cout << "=========================================================" << endl;*/
-	PrintGraph();
-	cout << "=========================================================" << endl;
+	
 	DynamicArray<DynamicArray<int>*>* listOfBfs2222 = GsTranspose->BFS(i_ToVertex);
 
 	Graph* HTranspose = new Graph(m_NumberOfVertex);
@@ -220,6 +215,10 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	} //end of for 
 
 	Graph* H = HTranspose->GetTransposedGraph();
+
+	delete Gs;
+	delete GsTranspose;
+	delete HTranspose;
 	return H;	
 }
 
