@@ -24,6 +24,7 @@ class Graph
 	public:	ListOfEdges Adj(int i_Vertex) {return m_AdjList[i_Vertex - 1];} // todo think of use - same as GetAdjList  https://mama.mta.ac.il/mod/forum/discuss.php?d=389 can do only one
 	
 	public: DynamicArray<DynamicArray<int>*>* BFS(int i_Vertex);
+	public: int* BFS(int i_Vertex, int** dbks);
 	public: Graph* GetTransposedGraph();
 	public: Graph* ShortestPathFromSToT(int i_FromVertex, int i_ToVertex);
 	public: bool fakeContains(DynamicArray<int>* arrToSearch, int vertexToFind);

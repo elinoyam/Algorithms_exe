@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "queue.h"
 #include <math.h>
 
 Graph::~Graph() {
@@ -77,36 +78,69 @@ int Graph::IsEmpty() {
 	return isGrapgEmpty;
 }
 
-DynamicArray<DynamicArray<int>*>* Graph::BFS(int i_Vertex) {
-	DynamicArray<DynamicArray<int>*>* result = new DynamicArray<DynamicArray<int>*>(m_NumberOfVertex);
+int* Graph::BFS(int i_Vertex, int**dbks) {
+	Queue queue(m_NumberOfVertex);
 	int* d = new int[m_NumberOfVertex];
+	int* p = new int[m_NumberOfVertex];
+	int vertex;
+
 	for (int i = 0; i < m_NumberOfVertex; i++) {
-		//result->at(i) = nullptr;
-		result->push_back(new DynamicArray<int>());
 		d[i] = numeric_limits<int>::max();
+		p[i] = -1;
 	}
+	queue.Enqueue(i_Vertex);
+	d[i_Vertex - 1] = 0;
 
-	d[i_Vertex-1] = 0;
-	//result->at(0) = new DynamicArray<int>(1);
-	result->at(0)->push_back(i_Vertex);			// the actual number
-	int index = 0;
-
-	while (result->at(index)->size() != 0) {
-		for (int j = 0; j < result->at(index)->size(); j++) {
-			ListOfEdges& currentVertexAdj = m_AdjList[(result->at(index)->at(j))-1];
-			ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
-			while (adj != nullptr) {
-				if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
-					d[adj->getEdge().getEdgeTargetVertex() - 1] = index + 1;
-					result->at(index + 1)->push_back(adj->getEdge().getEdgeTargetVertex());
-				}
-				adj = adj->getNext();
+	while (queue.size != 0) {
+		vertex = queue.Dequeue();
+		ListOfEdges& currentVertexAdj = m_AdjList[vertex - 1];
+		ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
+		while (adj != nullptr) {
+			if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
+				d[adj->getEdge().getEdgeTargetVertex() - 1] = d[vertex - 1] + 1;
+				p[adj->getEdge().getEdgeTargetVertex() - 1] = vertex;
+				queue.Enqueue(adj->getEdge().getEdgeTargetVertex());
 			}
-		}
-		index++;
-	}
 
-	return result;
+			adj = adj->getNext();
+		}
+	}
+	
+	//need to delete d
+	*dbks = d;
+	return p;
+
+	
+	DynamicArray<DynamicArray<int>*>* Graph::BFS(int i_Vertex) {
+	//DynamicArray<DynamicArray<int>*>* result = new DynamicArray<DynamicArray<int>*>(m_NumberOfVertex);
+	//int* d = new int[m_NumberOfVertex];
+	//for (int i = 0; i < m_NumberOfVertex; i++) {
+	//	//result->at(i) = nullptr;
+	//	result->push_back(new DynamicArray<int>());
+	//	d[i] = numeric_limits<int>::max();
+	//}
+
+	//d[i_Vertex-1] = 0;
+	////result->at(0) = new DynamicArray<int>(1);
+	//result->at(0)->push_back(i_Vertex);			// the actual number
+	//int index = 0;
+
+	//while (result->at(index)->size() != 0) {
+	//	for (int j = 0; j < result->at(index)->size(); j++) {
+	//		ListOfEdges& currentVertexAdj = m_AdjList[(result->at(index)->at(j))-1];
+	//		ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
+	//		while (adj != nullptr) {
+	//			if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
+	//				d[adj->getEdge().getEdgeTargetVertex() - 1] = index + 1;
+	//				result->at(index + 1)->push_back(adj->getEdge().getEdgeTargetVertex());
+	//			}
+	//			adj = adj->getNext();
+	//		}
+	//	}
+	//	index++;
+	//}
+
+	//return result;
 }
 
 Graph* Graph::GetTransposedGraph() {
