@@ -18,5 +18,3 @@ public:	int Front();
 public:	void Enqueue(int vertexToInset);
 public:	int Dequeue();
 };
-
-

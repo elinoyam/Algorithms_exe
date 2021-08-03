@@ -1,6 +1,11 @@
 #include "graph.h"
 #include "queue.h"
 #include <math.h>
+#define NO_PARENT -1
+
+
+Graph::Graph(const Graph& other) : m_NumberOfVertex(other.m_NumberOfVertex), m_AdjList(other.m_AdjList) {
+}
 
 Graph::~Graph() {
 	//for (int i = 0; i < m_NumberOfVertex; ++i) {
@@ -50,7 +55,7 @@ int Graph::AddEdge(int i_FromVertex, int i_ToVertex ) {
 void Graph::RemoveEdge(int i_FromVertex, int i_ToVertex) {
 	bool found = false;
 
-	ListOfEdges fromVertexList = m_AdjList[i_FromVertex - 1];
+	ListOfEdges& fromVertexList = getEdgesListInIndex(i_FromVertex - 1);
 	fromVertexList.RemoveEdge(i_ToVertex);
 }
 
@@ -78,7 +83,7 @@ int Graph::IsEmpty() {
 	return isGrapgEmpty;
 }
 
-int* Graph::BFS(int i_Vertex, int**dbks) {
+int* Graph::BFS(int i_Vertex, int** dbks) {
 	Queue queue(m_NumberOfVertex);
 	int* d = new int[m_NumberOfVertex];
 	int* p = new int[m_NumberOfVertex];
@@ -86,17 +91,17 @@ int* Graph::BFS(int i_Vertex, int**dbks) {
 
 	for (int i = 0; i < m_NumberOfVertex; i++) {
 		d[i] = numeric_limits<int>::max();
-		p[i] = -1;
+		p[i] = NO_PARENT;
 	}
 	queue.Enqueue(i_Vertex);
 	d[i_Vertex - 1] = 0;
 
-	while (queue.size != 0) {
+	while (!queue.isEmpty()) {
 		vertex = queue.Dequeue();
 		ListOfEdges& currentVertexAdj = m_AdjList[vertex - 1];
 		ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
 		while (adj != nullptr) {
-			if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
+			if (d[adj->getEdge().getEdgeTargetVertex() - 1] == numeric_limits<int>::max()) {
 				d[adj->getEdge().getEdgeTargetVertex() - 1] = d[vertex - 1] + 1;
 				p[adj->getEdge().getEdgeTargetVertex() - 1] = vertex;
 				queue.Enqueue(adj->getEdge().getEdgeTargetVertex());
@@ -105,43 +110,44 @@ int* Graph::BFS(int i_Vertex, int**dbks) {
 			adj = adj->getNext();
 		}
 	}
-	
+
 	//need to delete d
 	*dbks = d;
 	return p;
-
-	
-	DynamicArray<DynamicArray<int>*>* Graph::BFS(int i_Vertex) {
-	//DynamicArray<DynamicArray<int>*>* result = new DynamicArray<DynamicArray<int>*>(m_NumberOfVertex);
-	//int* d = new int[m_NumberOfVertex];
-	//for (int i = 0; i < m_NumberOfVertex; i++) {
-	//	//result->at(i) = nullptr;
-	//	result->push_back(new DynamicArray<int>());
-	//	d[i] = numeric_limits<int>::max();
-	//}
-
-	//d[i_Vertex-1] = 0;
-	////result->at(0) = new DynamicArray<int>(1);
-	//result->at(0)->push_back(i_Vertex);			// the actual number
-	//int index = 0;
-
-	//while (result->at(index)->size() != 0) {
-	//	for (int j = 0; j < result->at(index)->size(); j++) {
-	//		ListOfEdges& currentVertexAdj = m_AdjList[(result->at(index)->at(j))-1];
-	//		ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
-	//		while (adj != nullptr) {
-	//			if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
-	//				d[adj->getEdge().getEdgeTargetVertex() - 1] = index + 1;
-	//				result->at(index + 1)->push_back(adj->getEdge().getEdgeTargetVertex());
-	//			}
-	//			adj = adj->getNext();
-	//		}
-	//	}
-	//	index++;
-	//}
-
-	//return result;
 }
+
+	//	DynamicArray<DynamicArray<int>*>* Graph::BFS(int i_Vertex) {
+		//DynamicArray<DynamicArray<int>*>* result = new DynamicArray<DynamicArray<int>*>(m_NumberOfVertex);
+		//int* d = new int[m_NumberOfVertex];
+		//for (int i = 0; i < m_NumberOfVertex; i++) {
+		//	//result->at(i) = nullptr;
+		//	result->push_back(new DynamicArray<int>());
+		//	d[i] = numeric_limits<int>::max();
+		//}
+
+		//d[i_Vertex-1] = 0;
+		////result->at(0) = new DynamicArray<int>(1);
+		//result->at(0)->push_back(i_Vertex);			// the actual number
+		//int index = 0;
+
+		//while (result->at(index)->size() != 0) {
+		//	for (int j = 0; j < result->at(index)->size(); j++) {
+		//		ListOfEdges& currentVertexAdj = m_AdjList[(result->at(index)->at(j))-1];
+		//		ListOfEdges::EdgeNode* adj = currentVertexAdj.getListHead();
+		//		while (adj != nullptr) {
+		//			if (d[adj->getEdge().getEdgeTargetVertex() - 1]== numeric_limits<int>::max()) {
+		//				d[adj->getEdge().getEdgeTargetVertex() - 1] = index + 1;
+		//				result->at(index + 1)->push_back(adj->getEdge().getEdgeTargetVertex());
+		//			}
+		//			adj = adj->getNext();
+		//		}
+		//	}
+		//	index++;
+		//}
+
+		//return result;
+	//}
+
 
 Graph* Graph::GetTransposedGraph() {
 	Graph* transpose = new Graph(m_NumberOfVertex);
@@ -163,9 +169,96 @@ Graph* Graph::GetTransposedGraph() {
 }
 
 Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
+	Graph* Gs = new Graph(*this);
+	int* degreeList;
+	int* parentList;
+
+	parentList = BFS(i_FromVertex, &degreeList);
+
+	for (int i = 0; i < Gs->m_NumberOfVertex; i++) {		// for each vertex
+	// go through all the vertexes and delete each edge that degreeList[source] != degreeList[target] 
+	ListOfEdges::EdgeNode* currentEdge = Gs->getEdgesListInIndex(i).getListHead();
+	
+		while (currentEdge != nullptr) {
+			int v = currentEdge->getEdge().getEdgeTargetVertex();
+			if(degreeList[v-1] != degreeList[i] + 1) {
+				currentEdge = currentEdge->getNext();
+				Gs->RemoveEdge(i+1, v);
+			}
+			else {
+				currentEdge = currentEdge->getNext();
+			}
+		}
+	}
+	// tester
+	Gs->PrintGraph();
+	cout << "=========================================================" << endl;
+	//
+
+	Graph* GsTranspose = Gs->GetTransposedGraph(); // also Htranspose
+	
+	// tester
+	GsTranspose->PrintGraph();
+	cout << "=========================================================" << endl;
+	//
+
+	//delete p and d, and Gs
+	delete Gs;
+	delete[] degreeList;
+	delete[] parentList;
+
+	parentList = GsTranspose->BFS(i_ToVertex, &degreeList);
+
+
+	for (int i = 0; i < GsTranspose->m_NumberOfVertex; i++) {
+		if(!checkIfParentOfVertex(parentList,i+1,i_ToVertex)) {
+			GsTranspose->m_AdjList[i].RemoveAllTheEdges();
+		}
+		//else go to next u (==i)
+	}
+
+	// tester
+	GsTranspose->PrintGraph();
+	cout << "=========================================================" << endl;
+	//
+
+	//delete p and d
+	delete[] degreeList;
+	delete[] parentList;
+
+	Graph* H = GsTranspose->GetTransposedGraph(); 
+
+	// delete GsTranspose
+	delete GsTranspose;
+
+	return H;
+}
+
+
+bool Graph::checkIfParentOfVertex(int* parentList, int vertixToCheck, int parentToFind) {
+	bool found = false;
+	int currentParent = parentList[vertixToCheck - 1];
+	if (vertixToCheck == parentToFind) {
+		found = true;
+	}
+
+	while(!found && (currentParent != NO_PARENT)) {
+		if(currentParent == parentToFind) {
+			found = true;
+		}
+		else {
+			currentParent = parentList[currentParent - 1];
+		}
+	}
+
+	return found;
+}
+
+/*Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	Graph* Gs = new Graph(m_NumberOfVertex);
 
-	DynamicArray<DynamicArray<int>*>* listOfBfs = BFS(i_FromVertex);
+
+	DynamicArray<DynamicArray<int>*>* listOfBfs= BFS(i_FromVertex, &degreeList);
 	int index = 0;
 
 
@@ -210,13 +303,13 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	}
 
 	
-	/*Gs->PrintGraph();
-	cout << "=========================================================" << endl;*/
+	Gs->PrintGraph();
+	cout << "=========================================================" << endl;
 
 	Graph* GsTranspose = Gs->GetTransposedGraph();  
 
-	/*GsTranspose->PrintGraph();
-	cout << "=========================================================" << endl;*/
+	GsTranspose->PrintGraph();
+	cout << "=========================================================" << endl;
 	
 	DynamicArray<DynamicArray<int>*>* listOfBfs2222 = GsTranspose->BFS(i_ToVertex);
 
@@ -254,7 +347,7 @@ Graph* Graph::ShortestPathFromSToT(int i_FromVertex, int i_ToVertex) {
 	delete GsTranspose;
 	delete HTranspose;
 	return H;	
-}
+}*/
 
 bool Graph::fakeContains(DynamicArray<int>* arrToSearch, int vertexToFind) {
 	bool found = false;

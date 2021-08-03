@@ -19,6 +19,16 @@ ListOfEdges::~ListOfEdges() {
 	}
 }
 
+void ListOfEdges::RemoveAllTheEdges() {
+	EdgeNode* currentEdge = m_ListHead;
+	while (currentEdge != nullptr) {
+		EdgeNode* saveTheNextEdge = currentEdge->getNext();
+		delete currentEdge;
+		currentEdge = saveTheNextEdge;
+	}
+	m_ListHead = m_ListTail = nullptr;
+	m_NumberOfEdgesInList = 0;
+}
 
 ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(Edge& i_EdgeToAdd) {
 	ListOfEdges::EdgeNode* newTail = new ListOfEdges::EdgeNode(i_EdgeToAdd, nullptr);
@@ -81,4 +91,5 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 	}
 	if (!found)
 		throw invalid_argument("The given vertex is not in the graph. Therefore no vertex as been deleted.");
+	m_NumberOfEdgesInList--;
 }

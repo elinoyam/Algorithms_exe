@@ -28,5 +28,7 @@ public:
 	public: EdgeNode* getListHead() { return m_ListHead; }
 	public: EdgeNode* getListTail() { return m_ListTail; }
 	public: void RemoveEdge(int i_Adjacent);
+	public: void RemoveAllTheEdges();
+
 };
 

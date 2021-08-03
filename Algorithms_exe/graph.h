@@ -7,8 +7,11 @@ class Graph
 	private: int m_NumberOfVertex;
 	private: ListOfEdges* m_AdjList;
 
-
+private: ListOfEdges& getEdgesListInIndex(int index) { return m_AdjList[index]; }
+	private: bool checkIfParentOfVertex(int* parentList, int vertixToCheck, int parentToFind);
 	public: Graph(int i_NumberOfVertex) { MakeEmptyGraph(i_NumberOfVertex); }
+	public: Graph(const Graph& other);
+
 	public: ~Graph();
 
 	public: void MakeEmptyGraph(int i_NumberOfVertex) { m_AdjList = new ListOfEdges[i_NumberOfVertex]; m_NumberOfVertex = i_NumberOfVertex; }
