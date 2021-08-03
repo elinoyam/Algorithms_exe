@@ -41,9 +41,6 @@
     <ClInclude Include="edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dataStructures_exercize2\dataStructures_exercize2\dynamicArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="listOfEdges.h">
       <Filter>Header Files</Filter>
     </ClInclude>

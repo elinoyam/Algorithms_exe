@@ -30,10 +30,10 @@ void ListOfEdges::RemoveAllTheEdges() {
 	m_NumberOfEdgesInList = 0;
 }
 
-ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(Edge& i_EdgeToAdd) {
+ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(Edge i_EdgeToAdd) {
 	ListOfEdges::EdgeNode* newTail = new ListOfEdges::EdgeNode(i_EdgeToAdd, nullptr);
 
-	if (isEmpty()) //first link
+	if (isEmpty())			// first link
 		this->m_ListHead = this->m_ListTail = newTail;
 	else
 	{
@@ -46,8 +46,8 @@ ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(Edge& i_EdgeToAdd) {
 }
 
 
-ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(int i_OriginVertex, int i_TargetVertex, int i_EdgeWeight) {
-	Edge edge(i_OriginVertex, i_TargetVertex, i_EdgeWeight);
+ListOfEdges::EdgeNode* ListOfEdges::addEdgeToTail(int i_OriginVertex, int i_TargetVertex) {
+	Edge edge(i_OriginVertex, i_TargetVertex);
 	return ListOfEdges::addEdgeToTail(edge);
 }
 
@@ -56,7 +56,7 @@ void ListOfEdges::printList() {
 
 	while (currentNode != nullptr)
 	{
-		cout << currentNode->getEdge(); // need to do print operator
+		cout << currentNode->getEdge();			// need to do print operator
 		currentNode = currentNode->getNext();
 	}
 	cout << endl;
@@ -66,7 +66,7 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 	bool found = false;
 	ListOfEdges::EdgeNode* currentNode = m_ListHead;
 
-	if (currentNode->getEdge().getEdgeTargetVertex() == i_Adjacent) {					// the edge we want to remove is at the start of the list
+	if (currentNode->getEdge().getEdgeTargetVertex() == i_Adjacent) {			// the edge we want to remove is at the start of the list
 		m_ListHead = currentNode->getNext();
 		if (m_ListHead == nullptr) {
 			m_ListTail = nullptr;
@@ -80,6 +80,9 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 			currentNode->setNext(toDelete->getNext());
 			delete toDelete;
 			found = true;
+		}
+		else {
+			currentNode = currentNode->getNext();
 		}
 	}
 	if (!found && m_ListTail->getEdge().getEdgeTargetVertex() == i_Adjacent) {			// the edge we want to remove is at the end of the list

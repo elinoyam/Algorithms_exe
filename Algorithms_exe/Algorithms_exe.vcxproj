@@ -146,7 +146,6 @@
     <ClCompile Include="queue.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\dataStructures_exercize2\dataStructures_exercize2\dynamicArray.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="listOfEdges.h" />
