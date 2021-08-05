@@ -1,6 +1,7 @@
 #pragma once
 #include "listOfEdges.h"
 #include "queue.h"
+//#include "functionsHeader.h"
 #include <math.h>
 #define NO_PARENT -1
 
@@ -14,6 +15,7 @@ class Graph
 	private: int m_NumberOfVertex;
 	private: ListOfEdges* m_AdjList;
 
+	private: bool checkIfNumber1(string stringToCheck);
 	private: ListOfEdges& getEdgesListInIndex(int index) { return m_AdjList[index]; }
 	private: bool checkIfParentOfVertex(int* parentList, int vertixToCheck, int parentToFind);
 	public: Graph(int i_NumberOfVertex) { MakeEmptyGraph(i_NumberOfVertex); }
@@ -25,7 +27,7 @@ class Graph
 	public:	ListOfEdges GetAdjList(int i_Vertex) {return m_AdjList[i_Vertex - 1];}
 	public:	void RemoveEdge(int i_FromVertex, int i_ToVertex); 
 
-	public:	void ReadGraph(); // TODO!
+	public:	void ReadGraph(); 
 	public:	void PrintGraph();
 	public:	int IsEmpty(); 
 	public:	int AddEdge(int i_FromVertex, int i_ToVertex);

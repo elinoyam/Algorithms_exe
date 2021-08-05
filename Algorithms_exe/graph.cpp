@@ -1,5 +1,18 @@
 #include "graph.h"
 
+bool Graph::checkIfNumber1(string stringToCheck) {
+	bool res = true;
+
+	for (char ch : stringToCheck) {
+		if (ch < '0' || '9' < ch) {
+			res = false;
+			break;
+		}
+	}
+
+	return res;
+}
+
 Graph::Graph(const Graph& other) : m_NumberOfVertex(other.m_NumberOfVertex) {
 	m_AdjList = new ListOfEdges[m_NumberOfVertex];
 
@@ -57,7 +70,36 @@ void Graph::RemoveEdge(int i_FromVertex, int i_ToVertex) {
 	fromVertexList.RemoveEdge(i_ToVertex);
 }
 
-void Graph::ReadGraph() {} // todo
+void Graph::ReadGraph() {
+	string numberString;
+	int edgeSource;
+	int edgeTarget;
+
+	cin >> numberString;
+
+    while (!cin.eof()) { 
+		try {
+			if (!checkIfNumber1(numberString)) {
+				throw invalid_argument("The given vertex is not in a digit.");
+			}
+			// check if number
+			edgeSource = atoi(numberString.c_str());
+
+			cin >> numberString;
+
+			if (!checkIfNumber1(numberString) || cin.eof()) {
+				throw invalid_argument("The given vertex is not in a digit.");
+			}
+			
+			edgeTarget = atoi(numberString.c_str());
+			AddEdge(edgeSource, edgeTarget);
+			cin >> numberString;
+		}
+		catch (exception ex) {
+			throw ex;
+		}
+    }
+} 
 
 void Graph::PrintGraph() {
 	for(int i = 0; i < m_NumberOfVertex; ++i) {					// for each vertex

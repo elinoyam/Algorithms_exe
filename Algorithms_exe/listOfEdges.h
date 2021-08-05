@@ -1,5 +1,6 @@
 #pragma once
 #include "edge.h"
+using namespace std;
 
 /*************** FUNCTION DECLARATIONS ***************
 * This class represents a list of edges in a graph.

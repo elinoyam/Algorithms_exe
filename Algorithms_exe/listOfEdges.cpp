@@ -1,5 +1,4 @@
 #include "listOfEdges.h"
-using namespace std;
 
 ListOfEdges::ListOfEdges(const ListOfEdges& other) {
 	ListOfEdges::EdgeNode *edge = other.m_ListHead;
