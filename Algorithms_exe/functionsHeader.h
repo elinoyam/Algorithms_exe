@@ -6,6 +6,10 @@
 #include <iomanip>
 #include "graph.h"
 
+#define GOOD_INPUT 0
+#define BAD_INPUT -1
+
+
 using namespace std;
 
 bool checkIfNumber(string stringToCheck);

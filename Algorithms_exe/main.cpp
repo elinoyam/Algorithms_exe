@@ -1,62 +1,44 @@
 #include "functionsHeader.h"
 
-
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-using namespace std;
-
-
-int main2() {
-    int numberOfVertexes, sourceVertex, targetVertex, edgeSource, edgeTarget;
+int main() {
+    int numberOfVertexes, sourceVertex, targetVertex;
     string numberString;
-    bool WrongInput = false;
-    int result = -1;    
+    int result = BAD_INPUT;
+    Graph* res = nullptr;
 
-    cin >> numberString;
-    if (!checkIfNumber(numberString) || cin.eof()){
-        cout << "invalid input" << endl;
-        WrongInput = true;        
-    }
-    numberOfVertexes = atoi(numberString.c_str());
-    Graph mainGraph(numberOfVertexes);
-
-    cin >> numberString;
-    if ((!checkIfNumber(numberString) || cin.eof()) && !WrongInput) {
-        cout << "invalid input" << endl;
-        WrongInput = true;  
-    }
-    sourceVertex = atoi(numberString.c_str());
-
-    cin >> numberString;
-    if ((!checkIfNumber(numberString) || cin.eof()) && !WrongInput) {
-        cout << "invalid input" << endl;
-        WrongInput = true;  
-    }
-    targetVertex = atoi(numberString.c_str());
-
-    if (!WrongInput) {
-        try {
-            mainGraph.ReadGraph();
-            Graph* res = timeMeasurement(mainGraph, sourceVertex, targetVertex);
-            res->PrintGraph();
-            delete res;
-            result = 0;
+    try {
+        cin >> numberString;
+        if (cin.eof() || !checkIfNumber(numberString)) {
+            throw exception("invalid input");
         }
-        catch (exception ex) {
-            cout << "invalid input" << endl;
-        }
-    }
-    else {
+        numberOfVertexes = atoi(numberString.c_str());
+        Graph mainGraph(numberOfVertexes); 
 
+        cin >> numberString;
+        if (cin.eof() || !checkIfNumber(numberString)) {
+            throw exception("invalid input");
+        }
+        sourceVertex = atoi(numberString.c_str());
+
+        cin >> numberString;
+        if (cin.eof() || !checkIfNumber(numberString)) {
+            throw exception("invalid input");
+        }
+        targetVertex = atoi(numberString.c_str());
+    
+        // read the edges
+        mainGraph.ReadGraph();
+        res = timeMeasurement(mainGraph, sourceVertex, targetVertex);
+        res->PrintGraph();
+        result = GOOD_INPUT;
+    }
+    catch (exception ex) {
+        cout << "invalid input" << endl;
+    }
+    
+    if (res != nullptr) {
+        delete res;
     }
 
     return result;
-}
-
-int main() {
-    main2();
-    _CrtDumpMemoryLeaks();
-    return 11;
 }
