@@ -140,7 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="edge.cpp" />
-    <ClCompile Include="functions.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="listOfEdges.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,7 +149,6 @@
     <ClInclude Include="edge.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="listOfEdges.h" />
-    <ClInclude Include="functionsHeader.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

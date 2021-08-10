@@ -25,29 +25,45 @@ bool Queue::isEmpty() {
 }
 
 int Queue::Front() {
-	if(isEmpty()) {
-		throw logic_error("There aren't any items in the queue.");
-	}
+	try {
+		if(isEmpty()) {
+			throw logic_error("There aren't any items in the queue.");
+		}
 
-	return m_Queue[m_Head];
+		return m_Queue[m_Head];
+	}
+	catch (exception ex) {
+		throw ex;
+	}
+	
 }
 
 void Queue::Enqueue(int vertexToInset) {
-	if(AddOne(AddOne(m_Tail)) == m_Head){
-		throw length_error("The queue is full. Therefore the new item won't enter to the queue.");
-	}
+	try {
+		if(AddOne(AddOne(m_Tail)) == m_Head){
+				throw length_error("The queue is full. Therefore the new item won't enter to the queue.");
+		}
 
-	m_Tail = AddOne(m_Tail);
-	m_Queue[m_Tail] = vertexToInset;
+		m_Tail = AddOne(m_Tail);
+		m_Queue[m_Tail] = vertexToInset;
+	}
+	catch (exception ex) {
+		throw ex;
+	}
 }
 
 int Queue::Dequeue() {
-	if (isEmpty()) {
-		throw logic_error("There aren't any items in the queue.");
+	try {
+		if (isEmpty()) {
+			throw logic_error("There aren't any items in the queue.");
+		}
+
+		int item = m_Queue[m_Head];
+		m_Head = AddOne(m_Head);
+
+		return item;
 	}
-
-	int item = m_Queue[m_Head];
-	m_Head = AddOne(m_Head);
-
-	return item;
+	catch (exception ex) {
+		throw ex;
+	}
 }

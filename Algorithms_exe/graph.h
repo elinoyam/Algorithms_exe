@@ -15,7 +15,7 @@ class Graph
 	private: int m_NumberOfVertex;
 	private: ListOfEdges* m_AdjList;
 
-	private: bool checkIfNumber1(string stringToCheck);
+	public: static bool checkIfNumber(string stringToCheck);
 	private: ListOfEdges& getEdgesListInIndex(int index) { return m_AdjList[index]; }
 	private: bool checkIfParentOfVertex(int* parentList, int vertixToCheck, int parentToFind);
 	public: Graph(int i_NumberOfVertex) { MakeEmptyGraph(i_NumberOfVertex); }
