@@ -61,6 +61,10 @@ int main() {
     catch (/*exception*/int ex) {       // There is a problem with exceptions in the Mama site (using linux) so we used int instead.
         cout << "invalid input" << endl;
     }
+    catch (exception& ex) {      
+        cout << "invalid input" << endl;
+    }
+
     
     if (res != nullptr) {
         delete res;
