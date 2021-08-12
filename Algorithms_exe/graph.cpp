@@ -47,26 +47,21 @@ bool Graph::IsAdjacent(int i_FromVertex, int i_ToVertex) {
 }
 
 int Graph::AddEdge(int i_FromVertex, int i_ToVertex) { 
-	try {
-		int res = 1;
-		if (i_FromVertex > m_NumberOfVertex || i_FromVertex < 0 || i_ToVertex > m_NumberOfVertex || i_ToVertex < 0) {
+
+	int res = 1;
+	if (i_FromVertex > m_NumberOfVertex || i_FromVertex < 0 || i_ToVertex > m_NumberOfVertex || i_ToVertex < 0) {
+		res = 0;
+		throw 5;	// invalid_argument("not on scope");
+	}
+	else {
+		ListOfEdges& fromVertexList = m_AdjList[i_FromVertex - 1];
+		ListOfEdges::EdgeNode* newElem = fromVertexList.addEdgeToTail(i_FromVertex, i_ToVertex);
+		if (newElem == nullptr) {
 			res = 0;
-			throw invalid_argument("not on scope");
 		}
-		else {
-			ListOfEdges& fromVertexList = m_AdjList[i_FromVertex - 1];
-			ListOfEdges::EdgeNode* newElem = fromVertexList.addEdgeToTail(i_FromVertex, i_ToVertex);
-			if (newElem == nullptr) {
-				res = 0;
-			}
-		}
-
-		return res;
-	}
-	catch (exception ex) {
-		throw ex;
 	}
 
+	return res;
 }
 
 void Graph::RemoveEdge(int i_FromVertex, int i_ToVertex) {
@@ -84,26 +79,21 @@ void Graph::ReadGraph() {
 	cin >> numberString;
 
     while (!cin.eof()) { 
-		try {
-			if (!checkIfNumber(numberString)) {
-				throw invalid_argument("The given vertex is not in a digit.");
-			}
-			// check if number
-			edgeSource = atoi(numberString.c_str());
+		if (!checkIfNumber(numberString)) {
+			throw 5;	// invalid_argument("The given vertex is not in a digit.");
+		}
+		// check if number
+		edgeSource = atoi(numberString.c_str());
 
-			cin >> numberString;
+		cin >> numberString;
 
-			if (!checkIfNumber(numberString) || cin.eof()) {
-				throw invalid_argument("The given vertex is not in a digit.");
-			}
+		if (!checkIfNumber(numberString) || cin.eof()) {
+			throw invalid_argument("The given vertex is not in a digit.");
+		}
 			
-			edgeTarget = atoi(numberString.c_str());
-			AddEdge(edgeSource, edgeTarget);
-			cin >> numberString;
-		}
-		catch (exception ex) {
-			throw ex;
-		}
+		edgeTarget = atoi(numberString.c_str());
+		AddEdge(edgeSource, edgeTarget);
+		cin >> numberString;
     }
 } 
 

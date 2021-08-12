@@ -9,6 +9,11 @@ using namespace std;
 #define GOOD_INPUT 0
 #define BAD_INPUT -1
 
+/*
+    This program is getting a graph from the user and two vertexes s and t and printing the shortest paths from s to t in the graph.
+    The program is using the BFS algorithm and the given algorithm in the project implemented in ShortestPathFromSToT.
+    The program also prints the measurement time that took to rum the ShortestPathFromSToT method.
+*/
 int main() {
     int numberOfVertexes, sourceVertex, targetVertex;
     string numberString;
@@ -18,20 +23,20 @@ int main() {
     try {
         cin >> numberString;
         if (cin.eof() || !Graph::checkIfNumber(numberString)) {
-            throw exception("invalid input");
+            throw BAD_INPUT;    // exception("invalid input");
         }
         numberOfVertexes = atoi(numberString.c_str());
         Graph mainGraph(numberOfVertexes); 
 
         cin >> numberString;
         if (cin.eof() || !Graph::checkIfNumber(numberString)) {
-            throw exception("invalid input");
+            throw BAD_INPUT;    // exception("invalid input");
         }
         sourceVertex = atoi(numberString.c_str());
 
         cin >> numberString;
         if (cin.eof() || !Graph::checkIfNumber(numberString)) {
-            throw exception("invalid input");
+            throw BAD_INPUT;    // exception("invalid input");
         }
         targetVertex = atoi(numberString.c_str());
     
@@ -53,7 +58,7 @@ int main() {
         res->PrintGraph();
         result = GOOD_INPUT;
     }
-    catch (exception ex) {
+    catch (/*exception*/int ex) {       // There is a problem with exceptions in the Mama site (using linux) so we used int instead.
         cout << "invalid input" << endl;
     }
     

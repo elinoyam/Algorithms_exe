@@ -91,13 +91,8 @@ void ListOfEdges::RemoveEdge(int i_Adjacent) {
 		m_ListTail = currentNode;
 		found = true;
 	}
-	try {
-		if (!found)
-			throw invalid_argument("The given vertex is not in the graph. Therefore no vertex as been deleted.");
-		m_NumberOfEdgesInList--;
-	}
-	catch (exception ex) {
-		throw ex;
-	}
 	
+	if (!found)
+		throw 5;	// invalid_argument("The given vertex is not in the graph. Therefore no vertex as been deleted.");
+	m_NumberOfEdgesInList--;
 }
